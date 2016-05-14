@@ -1,7 +1,7 @@
 {
   "name": "spirit-dev/dbox-admin",
   "type": "symfony-bundle",
-  "description": "A simple portal",
+  "description": "A simple administration mngt",
   "homepage": "https://github.com/spirit-dev/dbox-admin",
   "keywords": [
     "portal"
