@@ -1,0 +1,24 @@
+<tr>
+    <td>LDAP Deletion</td>
+    <td class="{{ resolution.ldapIssue ? "success" : "warning" }}">{{ resolution.ldapIssue ? "true" : "false" }}</td>
+</tr>
+<tr>
+    <td>VCS Deletion</td>
+    <td class="{{ resolution.vcsIssue ? "success" : "warning" }}">{{ resolution.vcsIssue ? "true" : "false" }}</td>
+</tr>
+<tr>
+    <td>PM Deletion</td>
+    <td class="{{ resolution.pmIssue ? "success" : "warning" }}">{{ resolution.pmIssue ? "true" : "false" }}</td>
+</tr>
+<tr>
+    <td>CI Deletion</td>
+    <td class="warning">{{ resolution.ciIssue }}</td>
+</tr>
+<tr>
+    <td>QA Deletion</td>
+    <td class="{{ resolution.qaIssue ? "success" : "warning" }}">{{ resolution.qaIssue ? "true" : "false" }}</td>
+</tr>
+<tr>
+    <td>DB Deletion</td>
+    <td class="{{ resolution.dbIssue ? "success" : "warning" }}">{{ resolution.dbIssue ? "true" : "false" }}</td>
+</tr>

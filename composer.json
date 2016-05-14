@@ -1,0 +1,25 @@
+{
+  "name": "spirit-dev/dbox-admin",
+  "type": "symfony-bundle",
+  "description": "A simple portal",
+  "homepage": "https://github.com/spirit-dev/dbox-admin",
+  "keywords": [
+    "portal"
+  ],
+  "license": "GPLv3",
+  "authors": [
+    {
+      "name": "Jean Bordat",
+      "email": "bordat.jean@gmail.com",
+      "homepage": "http://jean.bordat.me/"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.2",
+    "javiereguiluz/easyadmin-bundle": "v1.11.2"
+  },
+  "autoload": {
+    "psr-0": { "SpiritDev\\Bundle\\DBoxAdminBundle": "" }
+  },
+  "target-dir": "SpiritDev/Bundle/DBoxAdminBundle"
+}

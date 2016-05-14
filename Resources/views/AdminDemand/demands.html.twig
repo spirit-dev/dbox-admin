@@ -1,0 +1,366 @@
+{% extends('SpiritDevDBoxAdminBundle:AdminDemand:adminLayout.html.twig') %}
+
+{% block title %}{{ 'pagetitle.admin'|trans }} - {{ parent() }}{% endblock %}
+
+{% block content_title %}
+    Demands mamangment
+{% endblock content_title %}
+
+{% block adm_content %}
+
+    {% set status_new_cnt = 0 %}
+    {% set status_processing_cnt = 0 %}
+    {% set status_cancelled_cnt = 0 %}
+    {% set status_resolved_cnt = 0 %}
+    {% set status_problem_cnt = 0 %}
+
+    {% for demand in demands %}
+        {% if demand.status.canonicalname == 'new' %}
+            {% set status_new_cnt = status_new_cnt + 1 %}
+        {% elseif demand.status.canonicalname == 'processing' %}
+            {% set status_processing_cnt = status_processing_cnt + 1 %}
+        {% elseif demand.status.canonicalname == 'cancelled' %}
+            {% set status_cancelled_cnt = status_cancelled_cnt + 1 %}
+        {% elseif demand.status.canonicalname == 'resolved' %}
+            {% set status_resolved_cnt = status_resolved_cnt + 1 %}
+        {% elseif demand.status.canonicalname == 'problem' %}
+            {% set status_problem_cnt = status_problem_cnt + 1 %}
+        {% endif %}
+    {% endfor %}
+
+
+    <div class="row">
+
+        <div class="col-sm-12">
+
+            <div data-example-id="togglable-tabs" class="bs-example bs-example-tabs">
+
+                <ul role="tablist" class="nav nav-tabs" id="demandTabs">
+                    <li class="active" role="presentation">
+                        <a aria-expanded="true" aria-controls="adm-dm-type-new" data-toggle="tab"
+                           id="adm-dm-type-new-tab"
+                           role="tab" href="#adm-dm-type-new">
+                            {{ 'demands.dashboard.tab.new'|trans }}
+                            <span class="badge demand-badge">{{ status_new_cnt }}</span>
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a aria-expanded="false" aria-controls="adm-dm-type-processing" data-toggle="tab"
+                           id="adm-dm-type-processing-tab" role="tab"
+                           href="#adm-dm-type-processing">{{ 'demands.dashboard.tab.processing'|trans }}
+                            <span class="badge demand-badge">{{ status_processing_cnt }}</span>
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a aria-expanded="false" aria-controls="adm-dm-type-cancelled" data-toggle="tab"
+                           id="adm-dm-type-cancelled-tab" role="tab"
+                           href="#adm-dm-type-cancelled">{{ 'demands.dashboard.tab.cancelled'|trans }}
+                            <span class="badge demand-badge">{{ status_cancelled_cnt }}</span>
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a aria-expanded="false" aria-controls="adm-dm-type-problem" data-toggle="tab"
+                           id="adm-dm-type-problem-tab"
+                           role="tab" href="#adm-dm-type-problem">{{ 'demands.dashboard.tab.problem'|trans }}
+                            <span class="badge demand-badge">{{ status_problem_cnt }}</span>
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a aria-expanded="false" aria-controls="adm-dm-type-resolved" data-toggle="tab"
+                           id="adm-dm-type-resolved-tab" role="tab"
+                           href="#adm-dm-type-resolved">{{ 'demands.dashboard.tab.resolved'|trans }}
+                            <span class="badge demand-badge">{{ status_resolved_cnt }}</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="demandTabsContent" style="margin-top: 15px;">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div aria-labelledby="adm-dm-type-new-tab" id="adm-dm-type-new"
+                                 class="tab-pane fade active in"
+                                 role="tabpanel">
+                                {% for demand in demands %}
+                                    {% if demand.status.canonicalname == 'new' %}
+                                        <div class="row">
+                                            <div class="admcol-sm-12">
+                                                <div class="panel-group" id="adm-{{ demand.id }}" role="tablist"
+                                                     aria-multiselectable="true">
+                                                    <div class="panel" style="border-color: {{ demand.status.color }}">
+                                                        <div class="panel-heading" role="tab"
+                                                             id="head-{{ demand.id }}"
+                                                             style="background-color: {{ demand.status.color }}; border-color: {{ demand.status.color }}; color: #fff;">
+                                                            <h5 class="panel-title">
+                                                                {% if is_granted('ROLE_ADMIN') %}
+                                                                    <a role="button" data-toggle="collapse"
+                                                                       data-parent="#adm-{{ demand.id }}"
+                                                                       href="#admcol-{{ demand.id }}"
+                                                                       aria-expanded="true"
+                                                                       aria-controls="admcol-{{ demand.id }}">
+                                                                        {{ 'demands.dashboard.demand'|trans }} {{ demand.askdate is empty ? "" : demand.askdate|date("Y-m-d") }}
+                                                                        -
+                                                                        {{ demand.type.name }}
+                                                                        -
+                                                                        {% if demand.applicant %}
+                                                                            {{ demand.applicant.username }}
+                                                                        {% endif %}
+                                                                    </a>
+                                                                {% else %}
+                                                                    <a role="button" data-toggle="collapse"
+                                                                       data-parent="#adm-{{ demand.id }}"
+                                                                       href="#admcol-{{ demand.id }}"
+                                                                       aria-expanded="true"
+                                                                       aria-controls="admcol-{{ demand.id }}">
+                                                                        {{ 'demands.dashboard.demand'|trans }} {{ demand.askdate is empty ? "" : demand.askdate|date("Y-m-d") }}
+                                                                        -
+                                                                        {{ demand.type.name }}
+                                                                    </a>
+                                                                {% endif %}
+                                                            </h5>
+                                                        </div>
+                                                        <div id="admcol-{{ demand.id }}"
+                                                             class="panel-collapse collapse"
+                                                             role="tabpanel"
+                                                             aria-labelledby="head-{{ demand.id }}">
+                                                            <div class="panel-body panel-body-demand">
+                                                                {% include('PortalBundle:Demand/Dashboard:demand_main.html.twig') %}
+                                                                {% include('PortalBundle:Demand/Dashboard:demand_type.html.twig') %}
+                                                                {% include('PortalBundle:Demand/Dashboard:demand_status.html.twig') %}
+                                                                {% include('PortalBundle:Demand/Dashboard:demand_comments.html.twig') %}
+                                                                {% if is_granted('ROLE_ADMIN') %}
+                                                                    {% include('PortalBundle:Demand/Dashboard:demand_update.html.twig') %}
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div aria-labelledby="adm-dm-type-processing-tab" id="adm-dm-type-processing"
+                                 class="tab-pane fade"
+                                 role="tabpanel">
+                                {% for demand in demands %}
+                                    {% if demand.status.canonicalname == 'processing' %}
+                                        <div class="panel-group" id="adm-{{ demand.id }}" role="tablist"
+                                             aria-multiselectable="true">
+                                            <div class="panel" style="border-color: {{ demand.status.color }}">
+                                                <div class="panel-heading" role="tab" id="head-{{ demand.id }}"
+                                                     style="background-color: {{ demand.status.color }}; color: #fff;">
+                                                    <h4 class="panel-title">
+                                                        {% if is_granted('ROLE_ADMIN') %}
+                                                            <a role="button" data-toggle="collapse"
+                                                               data-parent="#adm-{{ demand.id }}"
+                                                               href="#admcol-{{ demand.id }}"
+                                                               aria-expanded="true"
+                                                               aria-controls="admcol-{{ demand.id }}">
+                                                                {{ 'demands.dashboard.demand'|trans }} {{ demand.askdate is empty ? "" : demand.askdate|date("Y-m-d") }}
+                                                                -
+                                                                {{ demand.type.name }}
+                                                                -
+                                                                {{ demand.applicant.username }}
+                                                            </a>
+                                                        {% else %}
+                                                            <a role="button" data-toggle="collapse"
+                                                               data-parent="#adm-{{ demand.id }}"
+                                                               href="#admcol-{{ demand.id }}"
+                                                               aria-expanded="true"
+                                                               aria-controls="admcol-{{ demand.id }}">
+                                                                {{ 'demands.dashboard.demand'|trans }} {{ demand.askdate is empty ? "" : demand.askdate|date("Y-m-d") }}
+                                                                -
+                                                                {{ demand.type.name }}
+                                                            </a>
+                                                        {% endif %}
+                                                    </h4>
+                                                </div>
+                                                <div id="admcol-{{ demand.id }}" class="panel-collapse collapse"
+                                                     role="tabpanel"
+                                                     aria-labelledby="head-{{ demand.id }}">
+                                                    <div class="panel-body panel-body-demand">
+                                                        {% include('PortalBundle:Demand/Dashboard:demand_main.html.twig') %}
+                                                        {% include('PortalBundle:Demand/Dashboard:demand_type.html.twig') %}
+                                                        {% include('PortalBundle:Demand/Dashboard:demand_status.html.twig') %}
+                                                        {% include('PortalBundle:Demand/Dashboard:demand_comments.html.twig') %}
+                                                        {% if is_granted('ROLE_ADMIN') %}
+                                                            {% include('PortalBundle:Demand/Dashboard:demand_update.html.twig') %}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div aria-labelledby="adm-dm-type-cancelled-tab" id="adm-dm-type-cancelled"
+                                 class="tab-pane fade"
+                                 role="tabpanel">
+                                {% for demand in demands %}
+                                    {% if demand.status.canonicalname == 'cancelled' %}
+                                        <div class="panel-group" id="adm-{{ demand.id }}" role="tablist"
+                                             aria-multiselectable="true">
+                                            <div class="panel" style="border-color: {{ demand.status.color }}">
+                                                <div class="panel-heading" role="tab" id="head-{{ demand.id }}"
+                                                     style="background-color: {{ demand.status.color }}; color: #fff;">
+                                                    <h4 class="panel-title">
+                                                        {% if is_granted('ROLE_ADMIN') %}
+                                                            <a role="button" data-toggle="collapse"
+                                                               data-parent="#adm-{{ demand.id }}"
+                                                               href="#admcol-{{ demand.id }}"
+                                                               aria-expanded="true"
+                                                               aria-controls="admcol-{{ demand.id }}">
+                                                                {{ 'demands.dashboard.demand'|trans }} {{ demand.askdate is empty ? "" : demand.askdate|date("Y-m-d") }}
+                                                                -
+                                                                {{ demand.type.name }}
+                                                                -
+                                                                {{ demand.applicant.username }}
+                                                            </a>
+                                                        {% else %}
+                                                            <a role="button" data-toggle="collapse"
+                                                               data-parent="#adm-{{ demand.id }}"
+                                                               href="#admcol-{{ demand.id }}"
+                                                               aria-expanded="true"
+                                                               aria-controls="admcol-{{ demand.id }}">
+                                                                {{ 'demands.dashboard.demand'|trans }} {{ demand.askdate is empty ? "" : demand.askdate|date("Y-m-d") }}
+                                                                -
+                                                                {{ demand.type.name }}
+                                                            </a>
+                                                        {% endif %}
+                                                    </h4>
+                                                </div>
+                                                <div id="admcol-{{ demand.id }}" class="panel-collapse collapse"
+                                                     role="tabpanel"
+                                                     aria-labelledby="head-{{ demand.id }}">
+                                                    <div class="panel-body panel-body-demand">
+                                                        {% include('PortalBundle:Demand/Dashboard:demand_main.html.twig') %}
+                                                        {% include('PortalBundle:Demand/Dashboard:demand_type.html.twig') %}
+                                                        {% include('PortalBundle:Demand/Dashboard:demand_status.html.twig') %}
+                                                        {% include('PortalBundle:Demand/Dashboard:demand_comments.html.twig') %}
+                                                        {% if is_granted('ROLE_ADMIN') %}
+                                                            {% include('PortalBundle:Demand/Dashboard:demand_update.html.twig') %}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div aria-labelledby="adm-dm-type-problem-tab" id="adm-dm-type-problem"
+                                 class="tab-pane fade"
+                                 role="tabpanel">
+                                {% for demand in demands %}
+                                    {% if demand.status.canonicalname == 'problem' %}
+                                        <div class="panel-group" id="adm-{{ demand.id }}" role="tablist"
+                                             aria-multiselectable="true">
+                                            <div class="panel" style="border-color: {{ demand.status.color }}">
+                                                <div class="panel-heading" role="tab" id="head-{{ demand.id }}"
+                                                     style="background-color: {{ demand.status.color }}; color: #fff;">
+                                                    <h4 class="panel-title">
+                                                        {% if is_granted('ROLE_ADMIN') %}
+                                                            <a role="button" data-toggle="collapse"
+                                                               data-parent="#adm-{{ demand.id }}"
+                                                               href="#admcol-{{ demand.id }}"
+                                                               aria-expanded="true"
+                                                               aria-controls="admcol-{{ demand.id }}">
+                                                                {{ 'demands.dashboard.demand'|trans }} {{ demand.askdate is empty ? "" : demand.askdate|date("Y-m-d") }}
+                                                                -
+                                                                {{ demand.type.name }}
+                                                                -
+                                                                {{ demand.applicant.username }}
+                                                            </a>
+                                                        {% else %}
+                                                            <a role="button" data-toggle="collapse"
+                                                               data-parent="#adm-{{ demand.id }}"
+                                                               href="#admcol-{{ demand.id }}"
+                                                               aria-expanded="true"
+                                                               aria-controls="admcol-{{ demand.id }}">
+                                                                {{ 'demands.dashboard.demand'|trans }} {{ demand.askdate is empty ? "" : demand.askdate|date("Y-m-d") }}
+                                                                -
+                                                                {{ demand.type.name }}
+                                                            </a>
+                                                        {% endif %}
+                                                    </h4>
+                                                </div>
+                                                <div id="admcol-{{ demand.id }}" class="panel-collapse collapse"
+                                                     role="tabpanel"
+                                                     aria-labelledby="head-{{ demand.id }}">
+                                                    <div class="panel-body panel-body-demand">
+                                                        {% include('PortalBundle:Demand/Dashboard:demand_main.html.twig') %}
+                                                        {% include('PortalBundle:Demand/Dashboard:demand_type.html.twig') %}
+                                                        {% include('PortalBundle:Demand/Dashboard:demand_status.html.twig') %}
+                                                        {% include('PortalBundle:Demand/Dashboard:demand_comments.html.twig') %}
+                                                        {% if is_granted('ROLE_ADMIN') %}
+                                                            {% include('PortalBundle:Demand/Dashboard:demand_update.html.twig') %}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div aria-labelledby="adm-dm-type-resolved-tab" id="adm-dm-type-resolved"
+                                 class="tab-pane fade"
+                                 role="tabpanel">
+                                {% for demand in demands %}
+                                    {% if demand.status.canonicalname == 'resolved' %}
+                                        <div class="panel-group" id="adm-{{ demand.id }}" role="tablist"
+                                             aria-multiselectable="true">
+                                            <div class="panel" style="border-color: {{ demand.status.color }}">
+                                                <div class="panel-heading" role="tab" id="head-{{ demand.id }}"
+                                                     style="background-color: {{ demand.status.color }}; color: #fff;">
+                                                    <h4 class="panel-title">
+                                                        {% if is_granted('ROLE_ADMIN') %}
+                                                            <a role="button" data-toggle="collapse"
+                                                               data-parent="#adm-{{ demand.id }}"
+                                                               href="#admcol-{{ demand.id }}"
+                                                               aria-expanded="true"
+                                                               aria-controls="admcol-{{ demand.id }}">
+                                                                {{ 'demands.dashboard.demand'|trans }} {{ demand.askdate is empty ? "" : demand.askdate|date("Y-m-d") }}
+                                                                -
+                                                                {{ demand.type.name }}
+                                                                -
+                                                                {{ demand.applicant.username }}
+                                                            </a>
+                                                        {% else %}
+                                                            <a role="button" data-toggle="collapse"
+                                                               data-parent="#adm-{{ demand.id }}"
+                                                               href="#admcol-{{ demand.id }}"
+                                                               aria-expanded="true"
+                                                               aria-controls="admcol-{{ demand.id }}">
+                                                                {{ 'demands.dashboard.demand'|trans }} {{ demand.askdate is empty ? "" : demand.askdate|date("Y-m-d") }}
+                                                                -
+                                                                {{ demand.type.name }}
+                                                            </a>
+                                                        {% endif %}
+                                                    </h4>
+                                                </div>
+                                                <div id="admcol-{{ demand.id }}" class="panel-collapse collapse"
+                                                     role="tabpanel"
+                                                     aria-labelledby="head-{{ demand.id }}">
+                                                    <div class="panel-body panel-body-demand">
+                                                        {% include('PortalBundle:Demand/Dashboard:demand_main.html.twig') %}
+                                                        {% include('PortalBundle:Demand/Dashboard:demand_type.html.twig') %}
+                                                        {% include('PortalBundle:Demand/Dashboard:demand_status.html.twig') %}
+                                                        {% include('PortalBundle:Demand/Dashboard:demand_comments.html.twig') %}
+                                                        {% if is_granted('ROLE_ADMIN') %}
+                                                            {% include('PortalBundle:Demand/Dashboard:demand_update.html.twig') %}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+{% endblock adm_content %}

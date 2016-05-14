@@ -1,0 +1,5 @@
+services:
+
+    spirit_dev_dbox_admin_bundle.admin.processor:
+        class: SpiritDev\Bundle\DBoxAdminBundle\Processor\Processor
+        arguments: [@service_container, @router, @session, @templating]

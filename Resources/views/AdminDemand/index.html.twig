@@ -1,0 +1,43 @@
+{% extends('SpiritDevDBoxAdminBundle:AdminDemand:adminLayout.html.twig') %}
+
+{% block title %}{{ 'pagetitle.admin'|trans }} - {{ parent() }}{% endblock %}
+
+{% block adm_content %}
+
+    <h4 class="sub-header">Demands</h4>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <ul>
+                {% for demand in demands %}
+                    <li>{{ demand.id }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <h4 class="sub-header">Projects</h4>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <ul>
+                {% for project in projects %}
+                    <li>{{ project.name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <h4 class="sub-header">Users</h4>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <ul>
+                {% for user in users %}
+                    <li>{{ user.commonName }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+{% endblock adm_content %}

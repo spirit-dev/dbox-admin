@@ -1,0 +1,41 @@
+<tr>
+    <td>User</td>
+    <td class="{{ resolution.username is defined ? "success" : "warning" }}">{{ resolution.username is defined ? resolution.username : "none" }}
+        - {{ resolution.commonname is defined ? resolution.commonname : "none" }}</td>
+</tr>
+<tr>
+    <td>LDAP user creation</td>
+    <td class="{{ resolution.ldap_created ? "success" : "warning" }}">{{ resolution.ldap_created ? "true" : "false" }}</td>
+</tr>
+<tr>
+    <td>GitLab user creation</td>
+    <td class="{{ resolution.gitlab_created ? "success" : "warning" }}">{{ resolution.gitlab_created ? "true" : "false" }}</td>
+</tr>
+<tr>
+    <td>GitLab user ID</td>
+    <td class="{{ resolution.gitlab_user_id is defined ? "success" : "warning" }}">{{ resolution.gitlab_user_id }}</td>
+</tr>
+<tr>
+    <td>Redmine user creation</td>
+    <td class="{{ resolution.redmine_created ? "success" : "warning" }}">{{ resolution.redmine_created ? "true" : "false" }}</td>
+</tr>
+<tr>
+    <td>Redmine user ID</td>
+    <td class="{{ resolution.redmine_user_id is defined ? "success" : "warning" }}">{{ resolution.redmine_user_id is defined ? resolution.redmine_user_id : "none" }}</td>
+</tr>
+<tr>
+    <td>Jenkins user creation</td>
+    <td class="{{ not resolution.jenkins_created ? "success": "warning" }}">{{ resolution.jenkins_created }}</td>
+</tr>
+<tr>
+    <td>SonarQube user creation</td>
+    <td class="{{ resolution.sonar_created is defined ? "success" : "warning" }}">{{ resolution.sonar_created is defined ? "true" : "false" }}</td>
+</tr>
+<tr>
+    <td>Demand treatment status</td>
+    <td class="{{ resolution.demand_status is defined ? "success" : "warning" }}">{{ resolution.demand_status }}</td>
+</tr>
+<tr>
+    <td>Mailing</td>
+    <td class="{{ resolution.mail_sent ? "success" : "warning" }}">{{ resolution.mail_sent ? "true" : "false" }}</td>
+</tr>

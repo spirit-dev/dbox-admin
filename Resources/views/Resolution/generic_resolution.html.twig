@@ -1,0 +1,86 @@
+{% for slot in resolution.slot %}
+
+    {# SETTING SLOT NAME #}
+    <tr>
+        {% if slot.slot_name == 'Todos' %}
+            <td colspan="2" class="danger"><b>{{ slot.slot_name }}</b></td>
+        {% else %}
+            <td colspan="2"><b>{{ slot.slot_name }}</b></td>
+        {% endif %}
+    </tr>
+
+    {% if slot.data is defined %}
+        {% for data in slot.data %}
+
+            <tr>
+
+                <td>{{ data.val_name }}</td>
+
+                {# DATA ARRAY TYPE #}
+                {% if data.type == 'array' %}
+                    {% if data.data|length > 0 %}
+                        <td class="success">
+                            <ul>
+                                {% for ardata in data.data %}
+                                    <li>{{ ardata }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    {% else %}
+                        <td class="warning">error</td>
+                    {% endif %}
+                {% endif %}
+
+                {# DATA ARRAY WITH SUB KEY TYPE #}
+                {% if data.type == 'array_with_sub_key' %}
+                    {% if data.data|length > 0 %}
+                        <td class="success">
+
+                            <table class="table table-condensed">
+                                {% for ardata in data.data %}
+                                    <tr>
+                                        <td>{{ ardata.key }}</td>
+                                        <td>{{ ardata.data }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </td>
+                    {% else %}
+                        <td class="warning">error</td>
+                    {% endif %}
+                {% endif %}
+
+                {# DATA STRING TYPE #}
+                {% if data.type == 'string' %}
+                    <td class="{{ data.data is not null ? "success" : "warning" }}">{{ data.data is not null ? data.data : "error" }}</td>
+                {% endif %}
+
+                {# DATA BOOLEAN TYPE #}
+                {% if data.type == 'bool' %}
+                    <td class="{{ data.data ? "success" : "warning" }}">{{ data.data ? "true" : "false" }}</td>
+                {% endif %}
+
+                {# IF sTODO TYPE #}
+                {% if data.type == 'todo' %}
+
+                    {% if data.data|length > 0 %}
+                        <td class="danger">
+                            <ul>
+                                {% for todo in data.data %}
+                                    <li>
+                                        {{ todo|raw }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    {% endif %}
+
+                {% endif %}
+
+            </tr>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endfor %}

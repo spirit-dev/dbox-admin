@@ -1,0 +1,19 @@
+<tr>
+    <td>LDAP user lock</td>
+    <td class="{{ resolution.ldap_lock ? "success" : "warning" }}">{{ resolution.ldap_lock ? "true" : "false" }}</td>
+</tr>
+
+<tr>
+    <td>VCS user lock</td>
+    <td class="{{ resolution.vcs_lock ? "success" : "warning" }}">{{ resolution.vcs_lock ? "true" : "false" }}</td>
+</tr>
+
+<tr>
+    <td>PM user lock</td>
+    <td class="{{ resolution.pm_lock ? "success" : "warning" }}">{{ resolution.pm_lock ? "true" : "false" }}</td>
+</tr>
+
+<tr>
+    <td>DB user lock</td>
+    <td class="{{ resolution.db_lock ? "success" : "warning" }}">{{ resolution.db_lock ? "true" : "false" }}</td>
+</tr>

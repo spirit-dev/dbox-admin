@@ -1,0 +1,83 @@
+{% extends('EasyAdminBundle:default:layout.html.twig') %}
+
+{% block title %}{{ 'pagetitle.demand'|trans }} - {{ parent() }}{% endblock %}
+
+{% block content_title %}
+    {% if resolution.processor == 'user' or resolution.processor == 'project' %}
+        {{ 'demands.resolution.formhead'|trans }} - {{ resolution.demand_id }}
+    {% elseif resolution.processor == "delete_user" %}
+        {{ 'admin.resolution.user_deletion.title'|trans }} - {{ resolution.username }}
+    {% elseif resolution.processor == "activate_user" or resolution.processor == "deactivate_user" %}
+        {{ 'admin.resolution.user_de_actvate.title'|trans }} - {{ resolution.username }}
+    {% endif %}
+{% endblock content_title %}
+
+{% block main %}
+
+    {% for type, messages in app.session.flashBag.all %}
+        {% for message in messages %}
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="text-center">
+                        <div class="panel panel-{{ type }}">
+                            <div class="panel-body">
+                                {{ message|trans() }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            {% if resolution.processor == 'user' or resolution.processor == 'project' %}
+                {% if resolution.demand_id is defined %}
+                    <a class="btn btn-lg btn-primary"
+                       href="{{ path('easyadmin', {'action': 'show', 'id': resolution.demand_id, 'entity': 'Demand'}) }}">{{ 'demands.resolution.returnto'|trans }}</a>
+                {% else %}
+                    <a class="btn btn-lg btn-primary"
+                       href="{{ path('easyadmin', {'action': 'list', 'entity': 'Demand'}) }}">{{ 'demands.resolution.returnto'|trans }}</a>
+                {% endif %}
+            {% elseif resolution.processor == "delete_user" or resolution.processor == "activate_user" or resolution.processor == "deactivate_user" %}
+                <a class="btn btn-lg btn-primary"
+                   href="{{ path('easyadmin', {'action': 'list', 'entity': 'User'}) }}">{{ 'admin.resolution.user_deletion.return_to'|trans }}</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 10px;">
+
+        <div class="col-sm-12">
+
+            <table class="table table-bordered">
+                {% if resolution.processor == "user" %}
+
+                    {% include('SpiritDevDBoxAdminBundle:Resolution:user_creation.html.twig') %}
+
+                {% elseif resolution.processor == "delete_user" %}
+
+                    {% include('SpiritDevDBoxAdminBundle:Resolution:user_deletion.html.twig') %}
+
+                {% elseif resolution.processor == "activate_user" %}
+
+                    {% include('SpiritDevDBoxAdminBundle:Resolution:unlock_user.html.twig') %}
+
+                {% elseif resolution.processor == "deactivate_user" %}
+
+                    {% include('SpiritDevDBoxAdminBundle:Resolution:lock_user.html.twig') %}
+
+                {% else %}
+
+                    {% include('SpiritDevDBoxAdminBundle:Resolution:generic_resolution.html.twig') %}
+
+                {% endif %}
+            </table>
+
+        </div>
+
+    </div>
+
+{% endblock %}
