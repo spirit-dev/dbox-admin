@@ -25,8 +25,8 @@ class Processor extends ProcessorCore implements ProcessorCoreInterface {
     public function autoprocess(Demand $demandToProcess) {
         $resultValues = null;
         // Getting demand types
-        $newUserType = $this->em->getRepository('PortalBundle:Type')->findOneBy(array('canonicalName' => 'new_user'));
-        $newProjectType = $this->em->getRepository('PortalBundle:Type')->findOneBy(array('canonicalName' => 'new_project'));
+        $newUserType = $this->em->getRepository('SpiritDevDBoxPortalBundle:Type')->findOneBy(array('canonicalName' => 'new_user'));
+        $newProjectType = $this->em->getRepository('SpiritDevDBoxPortalBundle:Type')->findOneBy(array('canonicalName' => 'new_project'));
 
         // If demand is a new user request
         if ($demandToProcess->getType() == $newUserType) {
@@ -123,7 +123,7 @@ class Processor extends ProcessorCore implements ProcessorCoreInterface {
         // Process GitLabAPI project creation
         // Getting related project
         $projectId = $demandToProcess->getContent()["id"];
-        $demandProject = $this->em->getRepository('PortalBundle:Project')->findOneBy(array('id' => $projectId));
+        $demandProject = $this->em->getRepository('SpiritDevDBoxPortalBundle:Project')->findOneBy(array('id' => $projectId));
 
         // Process VCS project creation
         if ($demandProject->isVcsManaged()) {
@@ -291,18 +291,18 @@ class Processor extends ProcessorCore implements ProcessorCoreInterface {
             $returnValues['qaIssue'] = $this->sonarApi->deleteUser($user);
 
             // Remove demands
-            $demands = $this->em->getRepository('PortalBundle:Demand')->findBy(array('applicant' => $user));
-            $status = $this->em->getRepository('PortalBundle:Status')->findOneBy(array('canonicalName' => 'new'));
+            $demands = $this->em->getRepository('SpiritDevDBoxPortalBundle:Demand')->findBy(array('applicant' => $user));
+            $status = $this->em->getRepository('SpiritDevDBoxPortalBundle:Status')->findOneBy(array('canonicalName' => 'new'));
             foreach ($demands as $demand) {
                 $demand->setApplicant(null);
                 $demand->setStatus($status);
             }
             // Remove projects
-            $projectsOwned = $this->em->getRepository('PortalBundle:Project')->findBy(array('owner' => $user));
+            $projectsOwned = $this->em->getRepository('SpiritDevDBoxPortalBundle:Project')->findBy(array('owner' => $user));
             foreach ($projectsOwned as $project) {
                 $project->setOwner(null);
             }
-//            $projectMembers = $em->getRepository('PortalBundle:Project')->findBy(array('teamMembers'=>$user));
+//            $projectMembers = $em->getRepository('SpiritDevDBoxPortalBundle:Project')->findBy(array('teamMembers'=>$user));
 //            foreach ($projectMembers as $project) {
 //                $project->removeTeamMember($user);
 //            }

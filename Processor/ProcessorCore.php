@@ -188,7 +188,7 @@ abstract class ProcessorCore {
      */
     protected function processDemandUpdate(Demand $demandToProcess, User $dbUser, array $gitLabUser, \SimpleXMLElement $redmineUser) {
         // Getting EM and object
-        $succeedStatus = $this->em->getRepository('PortalBundle:Status')->findOneBy(array('canonicalName' => 'resolved'));
+        $succeedStatus = $this->em->getRepository('SpiritDevDBoxPortalBundle:Status')->findOneBy(array('canonicalName' => 'resolved'));
 
         // Updating demand
         $demandToProcess->setStatus($succeedStatus);
@@ -339,7 +339,7 @@ abstract class ProcessorCore {
 
         // Push Common Files
         $finderCommon = new Finder();
-        $finderCommon->files()->in($this->container->get('kernel')->getRootDir() . '/../src/PortalBundle/Resources/public/docs/common');
+        $finderCommon->files()->in($this->container->get('kernel')->getRootDir() . '/../src/SpiritDevDBoxPortalBundle/Resources/public/docs/common');
         foreach ($finderCommon as $file) {
             // Get file path
             $fileName = $file->getRelativePathname();
@@ -353,7 +353,7 @@ abstract class ProcessorCore {
         // Push PHP files
         if ($project->getLanguageType() == 'Php') {
             $finderPhp = new Finder();
-            $finderPhp->files()->in($this->container->get('kernel')->getRootDir() . '/../src/PortalBundle/Resources/public/docs/php');
+            $finderPhp->files()->in($this->container->get('kernel')->getRootDir() . '/../src/SpiritDevDBoxPortalBundle/Resources/public/docs/php');
             foreach ($finderPhp as $file) {
                 // Get file path
                 $fileName = $file->getRelativePathname();
@@ -618,7 +618,7 @@ abstract class ProcessorCore {
             // Finalizing process
 //            if ($project->getGitLabProjectId() != null && $project->getRedmineProjectId() != null) {
             // Update demand
-            $resolvedStatus = $this->em->getRepository('PortalBundle:Status')->findOneBy(array('canonicalName' => 'resolved'));
+            $resolvedStatus = $this->em->getRepository('SpiritDevDBoxPortalBundle:Status')->findOneBy(array('canonicalName' => 'resolved'));
             $demand->setStatus($resolvedStatus);
             $project->setActive(true);
 
@@ -763,7 +763,7 @@ abstract class ProcessorCore {
                 $project->setActive(false);
 
                 // Remove project CIs
-                $cis = $this->em->getRepository('PortalBundle:ContinuousIntegration')->findBy(array('project' => $project));
+                $cis = $this->em->getRepository('SpiritDevDBoxPortalBundle:ContinuousIntegration')->findBy(array('project' => $project));
                 foreach ($cis as $ci) {
                     $this->em->remove($ci);
                 }

@@ -18,7 +18,7 @@ class AdminExtendController extends EasyAdminController {
     public function autoprocessAction() {
         // Getting Demand
         $demandId = $this->request->query->get('id');
-        $demandToProcess = $this->em->getRepository('PortalBundle:Demand')->findOneBy(array('id' => $demandId));
+        $demandToProcess = $this->em->getRepository('SpiritDevDBoxPortalBundle:Demand')->findOneBy(array('id' => $demandId));
 
         // Calling processor service
         $resultValues = $this->get('spirit_dev_dbox_admin_bundle.admin.processor')->autoprocess($demandToProcess);
@@ -72,7 +72,7 @@ class AdminExtendController extends EasyAdminController {
      */
     public function deleteProjectAction() {
         $projectToDeleteId = $this->request->query->get('id');
-        $projectToDelete = $this->em->getRepository('PortalBundle:Project')->findOneBy(array('id' => $projectToDeleteId));
+        $projectToDelete = $this->em->getRepository('SpiritDevDBoxPortalBundle:Project')->findOneBy(array('id' => $projectToDeleteId));
 
         // Calling processor service
         $resultValues = $this->get('spirit_dev_dbox_admin_bundle.admin.processor')->deleteProject($projectToDelete);

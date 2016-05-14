@@ -20,7 +20,7 @@ class AdminDemandController extends Controller {
      */
     public function demandsAction() {
 
-        $demands = $this->getDoctrine()->getRepository('PortalBundle:Demand')->findAll();
+        $demands = $this->getDoctrine()->getRepository('SpiritDevDBoxPortalBundle:Demand')->findAll();
 
         return array(
             'tab_slot' => 'demands',
@@ -57,7 +57,7 @@ class AdminDemandController extends Controller {
             ));
         }
         // Return form
-        return $this->render('PortalBundle:Demand/Form:demandChangeStatus.html.twig', array(
+        return $this->render('SpiritDevDBoxPortalBundle:Demand/Form:demandChangeStatus.html.twig', array(
             'form' => $form->createView(),
             'id' => $demandId
         ));
@@ -85,7 +85,7 @@ class AdminDemandController extends Controller {
      */
     public function demandProcessAction($demandId) {
         // Getting demand to treat
-        $demandToProcess = $this->getDoctrine()->getRepository('PortalBundle:Demand')->findOneBy(array('id' => $demandId));
+        $demandToProcess = $this->getDoctrine()->getRepository('SpiritDevDBoxPortalBundle:Demand')->findOneBy(array('id' => $demandId));
 
         // Calling processor service
         $resultValues = $this->get('spirit_dev_dbox_admin_bundle.admin.processor')->autoprocess($demandToProcess);
