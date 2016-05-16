@@ -1,0 +1,423 @@
+easy_admin:
+    site_name: '<img class="top-menu-logo" src="/bundles/spiritdevdboxportal/images/EcosysV2/EcosystemV2-img-v-small.png">Admin-Ecosystem V2'
+    design:
+        assets:
+            favicon: '/EcosystemV2-img-light.ico'
+            css:
+              - 'bundles/portal/lib/jquery-ui-1.11.4.custom/jquery-ui.min.css'
+            js:
+              - 'bundles/portal/js/admin.js'
+              - 'bundles/portal/lib/jquery-ui-1.11.4.custom/jquery-ui.min.js'
+        menu:
+            - { label: 'Public Homepage', route: 'spirit_dev_dbox_portal_bundle_homepage', icon: 'home' }
+            - { label: 'Console', route: 'console', icon: 'terminal' }
+            - { entity: 'Application', icon: 'cloud' }
+            - { entity: 'Comment', icon: 'comments' }
+            - { entity: 'Communication', icon: 'envelope' }
+            - label: 'Demands'
+              icon: 'book'
+              children:
+                  - 'Demand'
+                  - 'Status'
+                  - 'Type'
+            - label: 'Project'
+              icon: 'bug'
+              children:
+                  - 'Project'
+                  - 'ContinuousIntegration'
+            - { entity: 'User', icon: 'user' }
+            - { entity: 'Todo', icon: 'map-marker' }
+            - { entity: 'Feedback', icon: 'comment' }
+            - label: 'Custom admin'
+              icon: 'modx'
+              children:
+                  - { label: 'Demand process', route: 'easyadmin_demand_dashboard' }
+    entities:
+        Application:
+            class: SpiritDev\Bundle\DBoxPortalBundle\Entity\Application
+            label: Applications
+            list:
+                actions: ['show', 'edit', 'new']
+                title: '%%entity_label%% - list'
+                fields:
+                    - 'id'
+                    - 'name'
+                    - 'canonicalName'
+                    - 'url'
+                    - { property: 'captionUri', label: 'Logo', type: 'image' }
+                    - { property: 'createdAt', format: 'd/m/Y' }
+                    - { property: 'updatedAt', format: 'd/m/Y' }
+                    - 'order'
+            show:
+                title: 'Show - %%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - 'id'
+                    - 'name'
+                    - 'canonicalName'
+                    - 'url'
+                    - 'captionUri'
+                    - 'createdAt'
+                    - 'updatedAt'
+                    - 'order'
+            form:
+                title: 'New - %%entity_label%%'
+                fields:
+                    - 'name'
+                    - 'canonicalName'
+                    - 'url'
+                    - 'captionUri'
+                    - 'order'
+        Comment:
+            class: SpiritDev\Bundle\DBoxPortalBundle\Entity\Comment
+            label: Comments
+            list:
+                actions: ['show', 'edit', 'new']
+                title: '%%entity_label%% - list'
+                fields:
+                    - 'id'
+                    - { property: 'user.commonName', label: 'User' }
+                    - 'content'
+                    - { property: 'createdAt', format: 'd/m/Y' }
+            show:
+                title: 'Show - %%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - 'id'
+                    - { property: 'user.commonName', label: 'User' }
+                    - 'content'
+                    - 'createdAt'
+            form:
+                title: 'New - %%entity_label%%'
+                fields:
+                    - 'user'
+                    - 'content'
+        Communication:
+            class: SpiritDev\Bundle\DBoxPortalBundle\Entity\Communication
+            label: Communications
+            list:
+                actions: ['show', 'edit', 'new']
+                title: '%%entity_label%% - list'
+                fields:
+                    - 'id'
+                    - { property: 'creationDate', label: 'Created at' }
+                    - { property: 'showFromDate', label: 'Show from' }
+                    - { property: 'showToDate', label: 'Show to' }
+                    - 'active'
+                    - 'type'
+                    - 'title'
+                    - 'content'
+            show:
+                title: 'Show - %%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - 'id'
+                    - { property: 'creationDate', label: 'Created at' }
+                    - { property: 'showFromDate', label: 'Show from' }
+                    - { property: 'showToDate', label: 'Show to' }
+                    - 'active'
+                    - 'type'
+                    - 'title'
+                    - 'content'
+            form:
+                title: 'New - %%entity_label%%'
+                fields:
+                    - { property: 'showFromDate', type_options: { widget: 'single_text' }, label: 'Show from' }
+                    - { property: 'showToDate', type_options: { widget: 'single_text' }, label: 'Show to' }
+                    - { property: 'active', label: 'Is active ?', type_options: { attr: { checked: 'checked' } } }
+                    - { property: 'type', type: 'choice', type_options: { choices: {notice: 'notice', info: 'info', success: 'success', error: 'error'} } }
+                    - 'title'
+                    - 'content'
+        Demand:
+            class: SpiritDev\Bundle\DBoxPortalBundle\Entity\Demand
+            label: Demands
+            disabled_actions: ['new']
+            list:
+                actions: ['show', 'edit', 'autoprocess']
+                title: '%%entity_label%% - list'
+                fields:
+                    - 'id'
+                    - { property: 'type.name', label: 'Type' }
+                    - { property: 'status.name', label: 'Status' }
+                    - { property: 'askdate', label: 'Asked the', format: 'd/m/Y' }
+                    - { property: 'resolutiondate', label: 'resolved the', format: 'd/m/Y' }
+                    - { property: 'applicant.commonName', label: 'Applicant' }
+                    - 'comments'
+            show:
+                title: 'Show - %%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - 'id'
+                    - { property: 'askdate', label: 'Asked the' }
+                    - { property: 'updatedate', label: 'Asked the' }
+                    - { property: 'resolutiondate', label: 'resolved the' }
+                    - { property: 'type.name', label: 'Type' }
+                    - { property: 'status.name', label: 'Status' }
+                    - { property: 'applicant.commonName', label: 'Applicant' }
+                    - 'comments'
+                    - 'content'
+            form:
+                title: 'New - %%entity_label%%'
+                fields:
+                    - { property: 'type', label: 'Type' }
+                    - { property: 'status', label: 'Status' }
+                    - { property: 'applicant', label: 'Applicant' }
+                    - 'content'
+        Project:
+            class: SpiritDev\Bundle\DBoxPortalBundle\Entity\Project
+            label: Projects
+            list:
+                actions: ['show', 'edit', 'new']
+                title: '%%entity_label%% - list'
+                fields:
+                    - 'id'
+                    - 'name'
+                    - 'canonicalName'
+                    - { property: 'imageName', label: 'Logo', type: 'image', base_path: '/media/project/' }
+                    - { property: 'createdAt', format: 'd/m/Y' }
+                    - 'active'
+                    - 'owner'
+                    - { property: 'gitLabWebUrl', label: 'GitLab Url' }
+                    - 'gitNbCommits'
+            show:
+                title: 'Show - %%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - 'id'
+                    - 'name'
+                    - 'canonicalName'
+                    - { property: 'imageName', label: 'Logo', type: 'image', base_path: '/media/project/' }
+                    - 'description'
+                    - 'createdAt'
+                    - 'updatedAt'
+                    - 'languageType'
+                    - 'active'
+                    - { property: 'owner', label: 'Owner' }
+                    - { property: 'teamMembers', label: 'Team members' }
+                    - 'gitLabIssueEnabled'
+                    - 'gitLabWikiEnabled'
+                    - 'gitLabSnippetsEnabled'
+                    - 'gitLabProjectId'
+                    - 'gitNbCommits'
+                    - 'gitCommitLastUpdate'
+                    - 'gitLabSshUrlToRepo'
+                    - 'gitLabHttpUrlToRepo'
+                    - 'gitLabWebUrl'
+                    - 'redmineProjectId'
+                    - 'redmineProjectIdentifier'
+                    - 'redmineWebUrl'
+                    - 'sonarProjectId'
+                    - 'sonarProjectKey'
+                    - 'vcsManaged'
+                    - 'pmManaged'
+                    - 'ciDevManaged'
+                    - 'qaDevManaged'
+                    - 'securityAssessments'
+            form:
+                title: 'New - %%entity_label%%'
+                fields:
+                    - 'name'
+                    - 'canonicalName'
+                    - { property: 'imageFile', label: 'Logo', type: 'vich_image' }
+                    - 'description'
+                    - 'languageType'
+                    - 'active'
+                    - { property: 'owner', label: 'Owner' }
+                    - { property: 'teamMembers', label: 'Team members' }
+                    - 'gitLabIssueEnabled'
+                    - 'gitLabWikiEnabled'
+                    - 'gitLabSnippetsEnabled'
+                    - 'gitLabSshUrlToRepo'
+                    - 'gitLabHttpUrlToRepo'
+                    - 'gitLabWebUrl'
+                    - 'redmineWebUrl'
+                    - 'vcsManaged'
+                    - 'pmManaged'
+                    - 'ciDevManaged'
+                    - 'qaDevManaged'
+                    - 'securityAssessments'
+        Status:
+            class: SpiritDev\Bundle\DBoxPortalBundle\Entity\Status
+            label: Status
+            list:
+                actions: ['show', 'edit', 'new']
+                title: '%%entity_label%% - list'
+                fields:
+                    - 'id'
+                    - 'name'
+                    - 'canonicalName'
+                    - 'description'
+                    - 'color'
+            show:
+                title: 'Show - %%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - 'id'
+                    - 'name'
+                    - 'canonicalName'
+                    - 'description'
+                    - 'color'
+            form:
+                title: 'New - %%entity_label%%'
+                fields:
+                    - 'name'
+                    - 'canonicalName'
+                    - 'description'
+                    - 'color'
+        Type:
+            class: SpiritDev\Bundle\DBoxPortalBundle\Entity\Type
+            label: Types
+            list:
+                actions: ['show', 'edit', 'new']
+                title: '%%entity_label%% - list'
+                fields:
+                    - 'id'
+                    - 'name'
+                    - 'canonicalName'
+                    - 'description'
+            show:
+                title: 'Show - %%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - 'id'
+                    - 'name'
+                    - 'canonicalName'
+                    - 'description'
+            form:
+                title: 'New - %%entity_label%%'
+                fields:
+                    - 'name'
+                    - 'canonicalName'
+                    - 'description'
+        User:
+            class: SpiritDev\Bundle\DBoxUserBundle\Entity\User
+            label: Users
+            disabled_actions: ['new']
+            list:
+                actions: ['show', 'edit', 'deactivate', 'activate', 'delete']
+                title: '%%entity_label%% - list'
+                fields:
+                    - 'id'
+                    - 'username'
+                    - { property: 'imageName', label: 'Avatar', type: 'image', base_path: '/media/user/' }
+                    - 'email'
+                    - 'enabled'
+                    - 'roles'
+                    - 'locked'
+                    - 'gitLabId'
+                    - 'redmineId'
+            show:
+                title: 'Show - %%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - 'id'
+                    - 'username'
+                    - 'usernameCanonical'
+                    - { property: 'imageName', label: 'Avatar', type: 'image', base_path: '/media/user/' }
+                    - 'email'
+                    - 'emailCanonical'
+                    - 'enabled'
+                    - 'lastLogin'
+                    - 'locked'
+                    - 'expired'
+                    - 'expiresAt'
+                    - 'roles'
+                    - 'credentialsExpired'
+                    - 'credentialsExpireAt'
+                    - 'dn'
+                    - 'lastName'
+                    - 'firstName'
+                    - 'language'
+                    - 'gitLabId'
+                    - 'redmineId'
+            form:
+                title: 'New - %%entity_label%%'
+                fields:
+                    - 'username'
+                    - 'usernameCanonical'
+                    - { property: 'imageFile', label: 'Logo', type: 'vich_image' }
+                    - 'email'
+                    - 'emailCanonical'
+                    - 'enabled'
+                    - 'locked'
+                    - 'expired'
+                    - 'expiresAt'
+                    - 'roles'
+                    - 'credentialsExpired'
+                    - 'credentialsExpireAt'
+                    - 'lastName'
+                    - 'firstName'
+                    - 'language'
+        Todo:
+            class: SpiritDev\Bundle\DBoxPortalBundle\Entity\Todo
+            label: Todos
+            list:
+                actions: ['show', 'edit', 'new']
+                title: '%%entity_label%% - list'
+                fields:
+                    - 'id'
+                    - 'content'
+            show:
+                title: 'Show - %%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - 'id'
+                    - 'content'
+            form:
+                title: 'New - %%entity_label%%'
+                fields:
+                    - 'content'
+
+        ContinuousIntegration:
+            class: SpiritDev\Bundle\DBoxPortalBundle\Entity\ContinuousIntegration
+            label: Continuous Integration
+            list:
+                actions: ['show', 'edit', 'new']
+                title: '%%entity_label%% - list'
+                fields:
+                    - 'id'
+                    - 'project'
+                    - 'active'
+                    - { property: 'ciName', label: 'CI Name' }
+                    - { property: 'remoteBuildUrl', label: 'Remote build Url' }
+                    - { property: 'AccessUrl', label: 'Access Url' }
+                    - 'parametrized'
+            show:
+                title: 'Show - %%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - 'id'
+                    - 'project'
+                    - 'active'
+                    - { property: 'ciName', label: 'CI Name' }
+                    - { property: 'remoteBuildUrl', label: 'Remote build Url' }
+                    - { property: 'AccessUrl', label: 'Access Url' }
+                    - { property: 'createdAt', format: 'd/m/Y' }
+                    - 'parametrized'
+                    - 'parameters'
+            form:
+                title: 'New - %%entity_label%%'
+                fields:
+                    - 'project'
+                    - { property: 'ciName', label: 'CI Name' }
+                    - { property: 'remoteBuildUrl', label: 'Remote build Url' }
+                    - { property: 'AccessUrl', label: 'Access Url' }
+                    - 'active'
+                    - 'parametrized'
+                    - 'parameters'
+
+        Feedback:
+            class: SpiritDev\Bundle\DBoxPortalBundle\Entity\Feedback
+            label: Feedback
+            list:
+                actions: ['show', 'edit']
+                title: '%%entity_label%% - list'
+                fields:
+                    - 'id'
+                    - 'createdAt'
+                    - 'content'
+                    - 'readed'
+                    - 'sender'
+            show:
+                title: 'Show - %%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - 'id'
+                    - 'createdAt'
+                    - 'content'
+                    - 'readed'
+                    - 'sender'
+            form:
+                title: 'New - %%entity_label%%'
+                fields:
+                    - 'content'
+                    - 'readed'

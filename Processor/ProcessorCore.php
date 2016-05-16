@@ -1,4 +1,23 @@
 <?php
+/**
+ * Copyright (c) 2016. Spirit-Dev
+ * Licensed under GPLv3 GNU License - http://www.gnu.org/licenses/gpl-3.0.html
+ *    _             _
+ *   /_`_  ._._/___/ | _
+ * . _//_//// /   /_.'/_'|/
+ *    /
+ *    
+ * Since 2K10 until today
+ *  
+ * Hex            53 70 69 72 69 74 2d 44 65 76
+ *  
+ * By             Jean Bordat
+ * Twitter        @Ji_Bay_
+ * Mail           <bordat.jean@gmail.com>
+ *  
+ * File           ProcessorCore.php
+ * Updated the    16/05/16 12:28
+ */
 
 namespace SpiritDev\Bundle\DBoxAdminBundle\Processor;
 
@@ -67,6 +86,9 @@ abstract class ProcessorCore {
      */
     protected $ldapDriver;
 
+    /**
+     * @var string
+     */
     protected $ciBaseUrl;
 
     /**
@@ -94,7 +116,7 @@ abstract class ProcessorCore {
         $this->sonarApi = $this->container->get('spirit_dev_dbox_portal_bundle.api.sonar');
         $this->jenkinsApi = $this->container->get('spirit_dev_dbox_portal_bundle.api.jenkins');
 
-        $this->ciBaseUrl = $this->container->getParameter('jenkins_api')['protocol'] . $this->container->getParameter('jenkins_api')['url'];
+        $this->ciBaseUrl = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.protocol') . $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.url');
     }
 
     /**
@@ -111,7 +133,7 @@ abstract class ProcessorCore {
         $username = strtolower($username);
 
         // Defining userDN
-        $userDn = 'uid=' . $username . ', ou=people, ' . $this->container->getParameter('ldap_driver')['user']['basedn'];
+        $userDn = 'uid=' . $username . ', ou=people, ' . $this->container->getParameter('spirit_dev_d_box_portal.ldap_driver.user.basedn');
         $userDn = str_replace(" ", "", $userDn);
 
         // Generating encoded SSHA Password
@@ -375,8 +397,8 @@ abstract class ProcessorCore {
      */
     protected function defineJenkinsProjectUrl(Project $project) {
 
-        $proto = $this->container->getParameter('jenkins_api')['protocol'];
-        $url = $this->container->getParameter('jenkins_api')['url'];
+        $proto = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.protocol');
+        $url = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.url');
         $projectPrepend = "/project/";
         $projectPostpend = $this->getJobName($project);
 
@@ -441,7 +463,7 @@ abstract class ProcessorCore {
      * @return string
      */
     protected function getRedmineWebUrl(Project $project) {
-        return $this->container->getParameter('redmine_api')['protocol'] . $this->container->getParameter('redmine_api')['url'] . '/projects/' . $project->getRedmineProjectIdentifier();
+        return $this->container->getParameter('spirit_dev_d_box_portal.redmine_api.protocol') . $this->container->getParameter('spirit_dev_d_box_portal.redmine_api.url') . '/projects/' . $project->getRedmineProjectIdentifier();
     }
 
     /**
@@ -543,8 +565,12 @@ abstract class ProcessorCore {
         return $returnValues;
     }
 
+    /**
+     * @param Project $project
+     * @return string
+     */
     protected function getSonarWebUrl(Project $project) {
-        $qa_api_url = $this->container->getParameter("sonar_api")["url"];
+        $qa_api_url = $this->container->getParameter("spirit_dev_d_box_portal.sonar_api.url");
         $qa_base_url = substr($qa_api_url, 0, count($qa_api_url) - 5);
         $qa_view_url = $qa_base_url . "dashboard/index/" . $project->getSonarProjectId();
         return $qa_view_url;
@@ -598,6 +624,10 @@ abstract class ProcessorCore {
         return $returnValues;
     }
 
+    /**
+     * @param $content
+     * @return mixed
+     */
     protected function addTodo($content) {
         $this->container->get('spirit_dev_dbox_portal_bundle.todos.manager')->addTodo($content);
         return $content;

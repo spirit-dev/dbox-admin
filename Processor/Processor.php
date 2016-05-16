@@ -1,15 +1,34 @@
 <?php
+/**
+ * Copyright (c) 2016. Spirit-Dev
+ * Licensed under GPLv3 GNU License - http://www.gnu.org/licenses/gpl-3.0.html
+ *    _             _
+ *   /_`_  ._._/___/ | _
+ * . _//_//// /   /_.'/_'|/
+ *    /
+ *    
+ * Since 2K10 until today
+ *  
+ * Hex            53 70 69 72 69 74 2d 44 65 76
+ *  
+ * By             Jean Bordat
+ * Twitter        @Ji_Bay_
+ * Mail           <bordat.jean@gmail.com>
+ *  
+ * File           Processor.php
+ * Updated the    15/05/16 11:47
+ */
 
 namespace SpiritDev\Bundle\DBoxAdminBundle\Processor;
 
 use Doctrine\ORM\Query;
 use SpiritDev\Bundle\DBoxPortalBundle\Entity\Demand;
 use SpiritDev\Bundle\DBoxPortalBundle\Entity\Project;
+use SpiritDev\Bundle\DBoxUserBundle\Entity\User;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
-use SpiritDev\Bundle\DBoxUserBundle\Entity\User;
 
 /**
  * Class Processor
