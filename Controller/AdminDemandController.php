@@ -6,17 +6,17 @@
  *   /_`_  ._._/___/ | _
  * . _//_//// /   /_.'/_'|/
  *    /
- *
+ *  
  * Since 2K10 until today
- *
+ *  
  * Hex            53 70 69 72 69 74 2d 44 65 76
- *
+ *  
  * By             Jean Bordat
  * Twitter        @Ji_Bay_
  * Mail           <bordat.jean@gmail.com>
- *
+ *  
  * File           AdminDemandController.php
- * Updated the    16/05/16 14:30
+ * Updated the    18/05/16 11:44
  */
 
 namespace SpiritDev\Bundle\DBoxAdminBundle\Controller;
@@ -38,7 +38,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class AdminDemandController extends Controller {
 
     /**
-     * @Route("/demand_dashboard", name="easyadmin_demand_dashboard")
+     * @Route("/demand_dashboard", name="spirit_dev_dbox_admin_demand_dashboard")
      * @Template()
      */
     public function demandsAction() {
@@ -52,7 +52,7 @@ class AdminDemandController extends Controller {
     }
 
     /**
-     * @Route("/demand/change_status/{demandId}", name="easyadmin_demand_change_status")
+     * @Route("/demand/change_status/{demandId}", name="spirit_dev_dbox_admin_demand_change_status")
      * @param $demandId
      * @param Request $request
      * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
@@ -102,7 +102,7 @@ class AdminDemandController extends Controller {
     }
 
     /**
-     * @Route("/demand/process/{demandId}", name="easyadmin_demand_process")
+     * @Route("/demand/process/{demandId}", name="spirit_dev_dbox_admin_demand_process")
      * @param $demandId
      * @return mixed
      */

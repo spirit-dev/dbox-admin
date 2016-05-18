@@ -31,7 +31,7 @@ easy_admin:
             - label: 'Custom admin'
               icon: 'modx'
               children:
-                  - { label: 'Demand process', route: 'easyadmin_demand_dashboard' }
+                  - { label: 'Demand process', route: 'spirit_dev_dbox_admin_demand_dashboard' }
     entities:
         Application:
             class: SpiritDev\Bundle\DBoxPortalBundle\Entity\Application
