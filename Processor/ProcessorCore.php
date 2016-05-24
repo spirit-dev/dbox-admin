@@ -6,7 +6,7 @@
  *   /_`_  ._._/___/ | _
  * . _//_//// /   /_.'/_'|/
  *    /
- *    
+ *  
  * Since 2K10 until today
  *  
  * Hex            53 70 69 72 69 74 2d 44 65 76
@@ -16,7 +16,7 @@
  * Mail           <bordat.jean@gmail.com>
  *  
  * File           ProcessorCore.php
- * Updated the    16/05/16 12:28
+ * Updated the    24/05/16 17:12
  */
 
 namespace SpiritDev\Bundle\DBoxAdminBundle\Processor;
@@ -26,13 +26,13 @@ use SpiritDev\Bundle\DBoxPortalBundle\Entity\ContinuousIntegration;
 use SpiritDev\Bundle\DBoxPortalBundle\Entity\Demand;
 use SpiritDev\Bundle\DBoxPortalBundle\Entity\Project;
 use SpiritDev\Bundle\DBoxPortalBundle\Mailer\Mailer;
+use SpiritDev\Bundle\DBoxUserBundle\Entity\User;
+use SpiritDev\Bundle\DBoxUserBundle\Security\Random\Randomize as Randomizer;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
-use SpiritDev\Bundle\DBoxUserBundle\Entity\User;
-use SpiritDev\Bundle\DBoxUserBundle\Security\Random\Randomize as Randomizer;
 
 /**
  * Class ProcessorCore
@@ -355,13 +355,18 @@ abstract class ProcessorCore {
      */
     protected function VCSPushMandatoryFiles(Project $project) {
 
+        // FIXME PATH
+
         // TODO Verify documents to push
 
         $fileArray = null;
+        $commonFilesPath = $this->container->get('kernel')->getRootDir() . '/../' . $this->container->getParameter('spirit_dev_d_box_admin.assets_root_path') . '/common';
+        $phpFilesPath = $this->container->get('kernel')->getRootDir() . '/../' . $this->container->getParameter('spirit_dev_d_box_admin.assets_root_path') . '/php';
 
         // Push Common Files
         $finderCommon = new Finder();
-        $finderCommon->files()->in($this->container->get('kernel')->getRootDir() . '/../src/SpiritDevDBoxPortalBundle/Resources/public/docs/common');
+//        $finderCommon->files()->in($this->container->get('kernel')->getRootDir() . '/../src/SpiritDevDBoxPortalBundle/Resources/public/docs/common');
+        $finderCommon->files()->in($commonFilesPath);
         foreach ($finderCommon as $file) {
             // Get file path
             $fileName = $file->getRelativePathname();
@@ -375,7 +380,8 @@ abstract class ProcessorCore {
         // Push PHP files
         if ($project->getLanguageType() == 'Php') {
             $finderPhp = new Finder();
-            $finderPhp->files()->in($this->container->get('kernel')->getRootDir() . '/../src/SpiritDevDBoxPortalBundle/Resources/public/docs/php');
+//            $finderPhp->files()->in($this->container->get('kernel')->getRootDir() . '/../src/SpiritDevDBoxPortalBundle/Resources/public/docs/php');
+            $finderCommon->files()->in($phpFilesPath);
             foreach ($finderPhp as $file) {
                 // Get file path
                 $fileName = $file->getRelativePathname();
@@ -533,7 +539,7 @@ abstract class ProcessorCore {
             // Create project
             $sonarPjt = $this->sonarApi->createProject($project);
 
-            if ($sonarPjt != null) {
+            if (count($sonarPjt) > 0) {
                 // Update local entity
                 $project->setSonarProjectId($sonarPjt['id']);
                 $project->setSonarProjectKey($sonarPjt['k']);
