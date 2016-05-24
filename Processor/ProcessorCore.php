@@ -6,15 +6,15 @@
  *   /_`_  ._._/___/ | _
  * . _//_//// /   /_.'/_'|/
  *    /
- *  
+ *
  * Since 2K10 until today
- *  
+ *
  * Hex            53 70 69 72 69 74 2d 44 65 76
- *  
+ *
  * By             Jean Bordat
  * Twitter        @Ji_Bay_
  * Mail           <bordat.jean@gmail.com>
- *  
+ *
  * File           ProcessorCore.php
  * Updated the    24/05/16 17:12
  */
@@ -381,7 +381,7 @@ abstract class ProcessorCore {
         if ($project->getLanguageType() == 'Php') {
             $finderPhp = new Finder();
 //            $finderPhp->files()->in($this->container->get('kernel')->getRootDir() . '/../src/SpiritDevDBoxPortalBundle/Resources/public/docs/php');
-            $finderCommon->files()->in($phpFilesPath);
+            $finderPhp->files()->in($phpFilesPath);
             foreach ($finderPhp as $file) {
                 // Get file path
                 $fileName = $file->getRelativePathname();
@@ -756,9 +756,10 @@ abstract class ProcessorCore {
 
         try {
             $sonarPjt = $this->sonarApi->deleteProject($project);
-            $returnValues['data'][] = $this->setRetVal('QA Project deletion', 'string', $sonarPjt['err_msg']);
+//            $returnValues['data'][] = $this->setRetVal('QA Project deletion', 'string', $sonarPjt['err_msg']);
+            $returnValues['data'][] = $this->setRetVal('QA Project deletion', 'string', true);
         } catch (\Exception $e) {
-            $returnValues['data'][] = $this->setRetVal('QA Project deletion', 'string', null);
+            $returnValues['data'][] = $this->setRetVal('QA Project deletion', 'string', $e->getMessage());
         }
 
         return $returnValues;
@@ -794,6 +795,7 @@ abstract class ProcessorCore {
                 // Unser local DB QA related datas
                 $project->setSonarProjectId(null);
                 $project->setSonarProjectKey(null);
+                $project->setSonarProjectUrl(null);
 
                 // Other
                 $project->setActive(false);
