@@ -37,9 +37,19 @@ class SpiritDevDBoxAdminExtension extends Extension {
      */
     public function load(array $configs, ContainerBuilder $container) {
         $configuration = new Configuration();
+        $config = array();
+        foreach ($configs as $subConfig) {
+            $config = array_merge($config, $subConfig);
+        }
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
+
+        if (!isset($config['assets_root_path'])) {
+            throw new \InvalidArgumentException('The "assets_root_path" option must be set');
+        } else {
+            $container->setParameter('spirit_dev_d_box_admin.assets_root_path', $config['assets_root_path']);
+        }
     }
 }
