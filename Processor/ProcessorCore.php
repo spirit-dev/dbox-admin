@@ -16,7 +16,7 @@
  * Mail           <bordat.jean@gmail.com>
  *  
  * File           ProcessorCore.php
- * Updated the    24/05/16 17:12
+ * Updated the    25/05/16 10:34
  */
 
 namespace SpiritDev\Bundle\DBoxAdminBundle\Processor;
@@ -354,8 +354,6 @@ abstract class ProcessorCore {
      * @return array|null
      */
     protected function VCSPushMandatoryFiles(Project $project) {
-
-        // FIXME PATH
 
         // TODO Verify documents to push
 
@@ -813,9 +811,9 @@ abstract class ProcessorCore {
             $this->em->flush();
             $returnValues['data'][] = $this->setRetVal('Entity updated', 'bool', true);
 
-            // TODO Send user mail + team mail ?
-//            $this->mailer->processProjectCreationSendMail($project);
-//            $returnValues['data'][] = $this->setRetVal('Mail sent', 'bool', true);
+            // Send user mail + team mail ?
+            $this->mailer->processProjectDeletionSendMail($project);
+            $returnValues['data'][] = $this->setRetVal('Mail sent', 'bool', true);
 
             $this->session->getFlashBag()->set('success', 'flashbag.demand.processing_deletion_project.success');
         } catch (\Exception $e) {
