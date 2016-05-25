@@ -6,17 +6,17 @@
  *   /_`_  ._._/___/ | _
  * . _//_//// /   /_.'/_'|/
  *    /
- *
+ *  
  * Since 2K10 until today
- *
+ *  
  * Hex            53 70 69 72 69 74 2d 44 65 76
- *
+ *  
  * By             Jean Bordat
  * Twitter        @Ji_Bay_
  * Mail           <bordat.jean@gmail.com>
- *
+ *  
  * File           ProcessorCore.php
- * Updated the    25/05/16 10:34
+ * Updated the    25/05/16 13:56
  */
 
 namespace SpiritDev\Bundle\DBoxAdminBundle\Processor;
@@ -515,6 +515,7 @@ abstract class ProcessorCore {
             ));
             $ci->setActive(false);
             $this->em->persist($ci);
+            $this->em->flush();
         } catch (\Exception $e) {
             $returnValues['data'][] = $this->setRetVal('CI ERROR', 'string', 'Unexpected error');
             $returnValues['data'][] = $this->setRetVal('CI View creation', 'bool', false);
@@ -725,6 +726,7 @@ abstract class ProcessorCore {
         try {
             // CI job name
             $ciJobName = $this->getJobName($project);
+            // TODO prefer deleting jobs via CI entities related to a project
             // Delete job
             $jenkins_job_deletion = $this->jenkinsApi->deleteJob($ciJobName);
             $returnValues['data'][] = $this->setRetVal('CI Job deletion', 'bool', $jenkins_job_deletion);
