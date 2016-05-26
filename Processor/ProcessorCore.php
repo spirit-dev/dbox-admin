@@ -16,7 +16,7 @@
  * Mail           <bordat.jean@gmail.com>
  *  
  * File           ProcessorCore.php
- * Updated the    25/05/16 13:56
+ * Updated the    26/05/16 17:54
  */
 
 namespace SpiritDev\Bundle\DBoxAdminBundle\Processor;
@@ -723,19 +723,25 @@ abstract class ProcessorCore {
 
         $returnValues['slot_name'] = 'CI';
 
-        try {
-            // CI job name
-            $ciJobName = $this->getJobName($project);
-            // TODO prefer deleting jobs via CI entities related to a project
+        // Delete Jobs
+        // Get all CI pipelines for a project
+        $pipelines = $this->em->getRepository('SpiritDevDBoxPortalBundle:ContinuousIntegration')->findBy(array(
+            'project' => $project->getId()
+        ));
+        // For each pipeline
+        $pipelinesDeletion = array();
+        foreach ($pipelines as $pipeline) {
             // Delete job
-            $jenkins_job_deletion = $this->jenkinsApi->deleteJob($ciJobName);
-            $returnValues['data'][] = $this->setRetVal('CI Job deletion', 'bool', $jenkins_job_deletion);
-        } catch (\Exception $e) {
-            $returnValues['data'][] = $this->setRetVal('CI Job deletion', 'bool', false);
+            $jenkins_job_deletion = $this->jenkinsApi->deleteJob($pipeline->getCiName());
+            $pipelinesDeletion[] = array(
+                'key' => $pipeline->getCiName(),
+                'data' => $jenkins_job_deletion
+            );
         }
+        $returnValues['data'][] = $this->setRetVal('CI Job deletion', 'array_with_sub_key', $pipelinesDeletion);
 
+        // Delete view
         try {
-            // Delete view
             $jenkins_view_deletion = $this->jenkinsApi->deleteView($project->getName());
             $returnValues['data'][] = $this->setRetVal('CI View deletion', 'bool', $jenkins_view_deletion);
         } catch (\Exception $e) {
