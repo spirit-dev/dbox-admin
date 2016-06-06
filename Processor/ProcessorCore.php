@@ -16,7 +16,7 @@
  * Mail           <bordat.jean@gmail.com>
  *  
  * File           ProcessorCore.php
- * Updated the    26/05/16 17:54
+ * Updated the    06/06/16 16:00
  */
 
 namespace SpiritDev\Bundle\DBoxAdminBundle\Processor;
@@ -133,7 +133,7 @@ abstract class ProcessorCore {
         $username = strtolower($username);
 
         // Defining userDN
-        $userDn = 'uid=' . $username . ', ou=people, ' . $this->container->getParameter('spirit_dev_d_box_portal.ldap_driver.user.basedn');
+        $userDn = 'uid=' . $username . ', ou=people, ' . $this->container->getParameter('spirit_dev_d_box_user.ldap_driver.user.basedn');
         $userDn = str_replace(" ", "", $userDn);
 
         // Generating encoded SSHA Password
