@@ -6,15 +6,15 @@
  *   /_`_  ._._/___/ | _
  * . _//_//// /   /_.'/_'|/
  *    /
- *  
+ *
  * Since 2K10 until today
- *  
+ *
  * Hex            53 70 69 72 69 74 2d 44 65 76
- *  
+ *
  * By             Jean Bordat
  * Twitter        @Ji_Bay_
  * Mail           <bordat.jean@gmail.com>
- *  
+ *
  * File           ProcessorCore.php
  * Updated the    06/06/16 16:00
  */
@@ -436,14 +436,14 @@ abstract class ProcessorCore {
                 // Updating project entity
                 $project->setRedmineProjectId((string)$redmineProject->{'id'});
                 $project->setRedmineProjectIdentifier((string)$redmineProject->{'identifier'});
-                $project->setRedmineWebUrl($this->getRedmineWebUrl($project));
+                $project->setRedmineWebUrl($this->redmineApi->getProjectWebUrl($project));
                 // Apply project modification
                 $this->em->flush();
 
                 // Setting retvals
                 $returnValues['data'][] = $this->setRetVal('PM project ID', 'string', (string)$redmineProject->{'id'});
                 $returnValues['data'][] = $this->setRetVal('PM project Identifier', 'string', (string)$redmineProject->{'identifier'});
-                $returnValues['data'][] = $this->setRetVal('PM project web URL', 'string', $this->getRedmineWebUrl($project));
+                $returnValues['data'][] = $this->setRetVal('PM project web URL', 'string', $this->redmineApi->getProjectWebUrl($project));
 
                 // Defining team members
                 $this->redmineApi->setProjectMemberships($project, $project->getTeamMembers(), $project->getOwner());
@@ -459,15 +459,6 @@ abstract class ProcessorCore {
             $returnValues['data'][] = $this->setRetVal('PM project web URL', 'string', null);
         }
         return $returnValues;
-    }
-
-    /**
-     * Define redmine url
-     * @param Project $project
-     * @return string
-     */
-    protected function getRedmineWebUrl(Project $project) {
-        return $this->container->getParameter('spirit_dev_d_box_portal.redmine_api.protocol') . $this->container->getParameter('spirit_dev_d_box_portal.redmine_api.url') . '/projects/' . $project->getRedmineProjectIdentifier();
     }
 
     /**
