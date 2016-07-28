@@ -16,7 +16,7 @@
  * Mail           <bordat.jean@gmail.com>
  *
  * File           Configuration.php
- * Updated the    15/05/16 11:47
+ * Updated the    28/07/16 17:15
  */
 
 namespace SpiritDev\Bundle\DBoxAdminBundle\DependencyInjection;
@@ -43,6 +43,7 @@ class Configuration implements ConfigurationInterface {
         $rootNode
             ->children()
             ->scalarNode('assets_root_path')->end()
+            ->booleanNode('commit_assets')->end()
             ->end();
 
         return $treeBuilder;

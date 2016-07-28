@@ -16,7 +16,7 @@
  * Mail           <bordat.jean@gmail.com>
  *
  * File           SpiritDevDBoxAdminExtension.php
- * Updated the    15/05/16 11:47
+ * Updated the    28/07/16 17:15
  */
 
 namespace SpiritDev\Bundle\DBoxAdminBundle\DependencyInjection;
@@ -50,6 +50,12 @@ class SpiritDevDBoxAdminExtension extends Extension {
             throw new \InvalidArgumentException('The "assets_root_path" option must be set');
         } else {
             $container->setParameter('spirit_dev_d_box_admin.assets_root_path', $config['assets_root_path']);
+        }
+
+        if (!isset($config['commit_assets'])) {
+            throw new \InvalidArgumentException('The "commit_assets" option must be set');
+        } else {
+            $container->setParameter('spirit_dev_d_box_admin.commit_assets', $config['commit_assets']);
         }
     }
 }

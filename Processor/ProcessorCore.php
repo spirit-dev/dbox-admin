@@ -16,7 +16,7 @@
  * Mail           <bordat.jean@gmail.com>
  *
  * File           ProcessorCore.php
- * Updated the    28/07/16 11:35
+ * Updated the    28/07/16 17:15
  */
 
 namespace SpiritDev\Bundle\DBoxAdminBundle\Processor;
@@ -288,8 +288,10 @@ abstract class ProcessorCore {
                     $this->em->flush();
 
                     // Commit push first documents
-                    $fileArray = $this->VCSPushMandatoryFiles($project);
-                    $returnValues['data'][] = $this->setRetVal('VCS files', 'array', $fileArray);
+                    if ($this->container->getParameter('spirit_dev_d_box_admin.commit_assets')) {
+                        $fileArray = $this->VCSPushMandatoryFiles($project);
+                        $returnValues['data'][] = $this->setRetVal('VCS files', 'array', $fileArray);
+                    }
 
                     // Creating hook(s)
                     // Nb Commit updater hook
