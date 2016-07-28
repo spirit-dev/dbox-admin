@@ -16,7 +16,7 @@
  * Mail           <bordat.jean@gmail.com>
  *
  * File           ProcessorCore.php
- * Updated the    06/06/16 16:00
+ * Updated the    28/07/16 11:35
  */
 
 namespace SpiritDev\Bundle\DBoxAdminBundle\Processor;
@@ -544,7 +544,7 @@ abstract class ProcessorCore {
                 $perms = array();
                 foreach ($project->getTeamMembers() as $user) {
                     $perm = $this->sonarApi->addPermission($user, $project);
-                    dump($perm);
+//                    dump($perm);
                     $perms[] = $perm['user'];
                 }
                 $returnValues['data'][] = $this->setRetVal('QA project members', 'array', $perms);
