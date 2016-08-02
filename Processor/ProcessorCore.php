@@ -16,7 +16,7 @@
  * Mail           <bordat.jean@gmail.com>
  *
  * File           ProcessorCore.php
- * Updated the    28/07/16 17:15
+ * Updated the    02/08/16 17:26
  */
 
 namespace SpiritDev\Bundle\DBoxAdminBundle\Processor;
@@ -90,6 +90,10 @@ abstract class ProcessorCore {
      * @var string
      */
     protected $ciBaseUrl;
+    /**
+     * @var string
+     */
+    protected $externalUri;
 
     /**
      * ProcessorCore constructor.
@@ -117,6 +121,7 @@ abstract class ProcessorCore {
         $this->jenkinsApi = $this->container->get('spirit_dev_dbox_portal_bundle.api.jenkins');
 
         $this->ciBaseUrl = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.protocol') . $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.url');
+        $this->externalUri = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.external_uri');
     }
 
     /**
@@ -486,7 +491,8 @@ abstract class ProcessorCore {
             $returnValues['data'][] = $this->setRetVal('CI Job add to view', 'bool', $jenkins_job_to_view);
             // Add ci remote access
             $ci = new ContinuousIntegration();
-            $ci->setAccessUrl(sprintf('%s/job/%s', $this->ciBaseUrl, $ciJobName));
+            // Selecting the right uri
+            $ci->setAccessUrl(sprintf('%s/job/%s', $this->externalUri == "none" ? $this->ciBaseUrl : $this->externalUri, $ciJobName));
             $ci->setProject($project);
             $ci->setCiName($ciJobName);
             $ci->setParametrized(true);
