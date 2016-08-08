@@ -322,7 +322,7 @@ easy_admin:
                     - 'language'
                     - 'gitLabId'
                     - 'redmineId'
-                    - nextSyncDate
+                    - 'nextSyncDate'
             form:
                 title: 'New - %%entity_label%%'
                 fields:
