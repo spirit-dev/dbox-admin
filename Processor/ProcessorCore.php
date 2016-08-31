@@ -16,7 +16,7 @@
  * Mail           <bordat.jean@gmail.com>
  *
  * File           ProcessorCore.php
- * Updated the    31/08/16 15:12
+ * Updated the    31/08/16 16:59
  */
 
 namespace SpiritDev\Bundle\DBoxAdminBundle\Processor;
@@ -408,20 +408,20 @@ abstract class ProcessorCore {
      */
     protected function defineJenkinsProjectUrl(Project $project) {
 
-        $useExternalUri = $this->getContainer()->getParameter('spirit_dev_d_box_portal.jenkins_api.web_hook_use_external');
+        $useExternalUri = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.web_hook_use_external');
 
-        $user = $this->getContainer()->getParameter('spirit_dev_d_box_portal.jenkins_api.user');
-        $token = $this->getContainer()->getParameter('spirit_dev_d_box_portal.jenkins_api.token');
+        $user = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.user');
+        $token = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.token');
         $projectPrepend = "/project/";
         $projectPostpend = $this->getJobName($project);
 
         if (!$useExternalUri) {
-            $proto = $this->getContainer()->getParameter('spirit_dev_d_box_portal.jenkins_api.protocol');
-            $url = $this->getContainer()->getParameter('spirit_dev_d_box_portal.jenkins_api.url');
+            $proto = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.protocol');
+            $url = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.url');
 
             return $proto . $user . ":" . $token . "@" . $url . $projectPrepend . $projectPostpend;
         } else {
-            $externalUri = $this->getContainer()->getParameter('spirit_dev_d_box_portal.jenkins_api.external_uri');
+            $externalUri = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.external_uri');
             $proto = parse_url($externalUri, PHP_URL_SCHEME) . "://";
             $url = parse_url($externalUri, PHP_URL_HOST);
 
