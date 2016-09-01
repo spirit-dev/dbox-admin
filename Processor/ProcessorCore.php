@@ -16,7 +16,7 @@
  * Mail           <bordat.jean@gmail.com>
  *
  * File           ProcessorCore.php
- * Updated the    31/08/16 16:59
+ * Updated the    01/09/16 16:27
  */
 
 namespace SpiritDev\Bundle\DBoxAdminBundle\Processor;
@@ -406,7 +406,7 @@ abstract class ProcessorCore {
      * @param Project $project
      * @return string
      */
-    protected function defineJenkinsProjectUrl(Project $project) {
+    public function defineJenkinsProjectUrl(Project $project) {
 
         $useExternalUri = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.web_hook_use_external');
 
