@@ -16,7 +16,7 @@
  * Mail           <bordat.jean@gmail.com>
  *
  * File           ProcessorCore.php
- * Updated the    06/06/16 16:00
+ * Updated the    01/09/16 16:27
  */
 
 namespace SpiritDev\Bundle\DBoxAdminBundle\Processor;
@@ -90,6 +90,10 @@ abstract class ProcessorCore {
      * @var string
      */
     protected $ciBaseUrl;
+    /**
+     * @var string
+     */
+    protected $externalUri;
 
     /**
      * ProcessorCore constructor.
@@ -117,6 +121,7 @@ abstract class ProcessorCore {
         $this->jenkinsApi = $this->container->get('spirit_dev_dbox_portal_bundle.api.jenkins');
 
         $this->ciBaseUrl = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.protocol') . $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.url');
+        $this->externalUri = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.external_uri');
     }
 
     /**
@@ -288,8 +293,10 @@ abstract class ProcessorCore {
                     $this->em->flush();
 
                     // Commit push first documents
-                    $fileArray = $this->VCSPushMandatoryFiles($project);
-                    $returnValues['data'][] = $this->setRetVal('VCS files', 'array', $fileArray);
+                    if ($this->container->getParameter('spirit_dev_d_box_admin.commit_assets')) {
+                        $fileArray = $this->VCSPushMandatoryFiles($project);
+                        $returnValues['data'][] = $this->setRetVal('VCS files', 'array', $fileArray);
+                    }
 
                     // Creating hook(s)
                     // Nb Commit updater hook
@@ -399,14 +406,27 @@ abstract class ProcessorCore {
      * @param Project $project
      * @return string
      */
-    protected function defineJenkinsProjectUrl(Project $project) {
+    public function defineJenkinsProjectUrl(Project $project) {
 
-        $proto = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.protocol');
-        $url = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.url');
+        $useExternalUri = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.web_hook_use_external');
+
+        $user = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.user');
+        $token = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.token');
         $projectPrepend = "/project/";
         $projectPostpend = $this->getJobName($project);
 
-        return $proto . $url . $projectPrepend . $projectPostpend;
+        if (!$useExternalUri) {
+            $proto = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.protocol');
+            $url = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.url');
+
+            return $proto . $user . ":" . $token . "@" . $url . $projectPrepend . $projectPostpend;
+        } else {
+            $externalUri = $this->container->getParameter('spirit_dev_d_box_portal.jenkins_api.external_uri');
+            $proto = parse_url($externalUri, PHP_URL_SCHEME) . "://";
+            $url = parse_url($externalUri, PHP_URL_HOST);
+
+            return $proto . $user . ":" . $token . "@" . $url . $projectPrepend . $projectPostpend;
+        }
 
     }
 
@@ -484,7 +504,8 @@ abstract class ProcessorCore {
             $returnValues['data'][] = $this->setRetVal('CI Job add to view', 'bool', $jenkins_job_to_view);
             // Add ci remote access
             $ci = new ContinuousIntegration();
-            $ci->setAccessUrl(sprintf('%s/job/%s', $this->ciBaseUrl, $ciJobName));
+            // Selecting the right uri
+            $ci->setAccessUrl(sprintf('%s/job/%s', $this->externalUri == "none" ? $this->ciBaseUrl : $this->externalUri, $ciJobName));
             $ci->setProject($project);
             $ci->setCiName($ciJobName);
             $ci->setParametrized(true);
@@ -544,7 +565,7 @@ abstract class ProcessorCore {
                 $perms = array();
                 foreach ($project->getTeamMembers() as $user) {
                     $perm = $this->sonarApi->addPermission($user, $project);
-                    dump($perm);
+//                    dump($perm);
                     $perms[] = $perm['user'];
                 }
                 $returnValues['data'][] = $this->setRetVal('QA project members', 'array', $perms);
